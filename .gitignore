@@ -1,5 +1,33 @@
-# Ignorar carpeta node_modules
+# ==========================================
+# FRONTEND (Angular)
+# ==========================================
 node_modules/
-
-# Ignorar archivo environment.ts
+dist/
+.angular/
 **/environments/
+
+# ==========================================
+# BACKEND (Spring Boot / Maven)
+# ==========================================
+target/
+*.jar
+*.war
+*.log
+
+# ==========================================
+# IDEs Y SISTEMA OPERATIVO
+# ==========================================
+.vscode/
+.idea/
+*.iml
+.classpath
+.project
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# CREDENCIALES Y SECRETOS (Regla estricta EP1/EP2)
+# ==========================================
+# Descomenta la siguiente línea si tu application.properties tiene tu clave real de Oracle:
+# application.properties
+.env

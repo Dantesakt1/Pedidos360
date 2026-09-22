@@ -8,7 +8,7 @@ import {
   MsalGuardConfiguration,
   MsalInterceptorConfiguration
 } from '@azure/msal-angular';
-import { environment } from '../environments/environment';
+import { environment } from 'environments/environment';
 export function MSALInstanceFactory():
   IPublicClientApplication {
   return new PublicClientApplication({

@@ -1,0 +1,32 @@
+<div class="container">
+    <h2>Gestión de Pedidos</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Pedido</th>
+                <th>Cliente ID</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acciones Operador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let pedido of pedidos">
+                <td>{{ pedido.id }}</td>
+                <td>{{ pedido.clienteId }}</td>
+                <td><strong>{{ pedido.estado }}</strong></td>
+                <td>{{ pedido.fechaCreacion | date:'short' }}</td>
+                <td>
+                    <!-- Regla: No DESPACHAR sin ACEPTAR -->
+                    <button *ngIf="pedido.estado === 'CREADO'" (click)="avanzarEstado(pedido, 'ACEPTADO')">
+                        Aceptar Pedido
+                    </button>
+
+                    <button *ngIf="pedido.estado === 'ACEPTADO'" (click)="avanzarEstado(pedido, 'DESPACHADO')">
+                        Despachar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

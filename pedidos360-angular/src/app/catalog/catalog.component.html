@@ -1,0 +1,25 @@
+<div class="container">
+    <h2>Catálogo de Productos</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let prod of productos">
+                <td>{{ prod.id }}</td>
+                <td>{{ prod.nombre }}</td>
+                <td>${{ prod.precio }}</td>
+                <td>
+                    <span [style.color]="prod.stock === 0 ? 'red' : 'black'">
+                        {{ prod.stock }}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

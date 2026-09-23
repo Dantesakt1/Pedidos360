@@ -1,25 +1,38 @@
-<main class="contenedor">
+<div class="container" style="padding: 20px; font-family: Arial, sans-serif;">
+  <h1>Pedidos360</h1>
 
-  <h1>DSY1107 - MSAL + Angular</h1>
-
-  <section *ngIf="!user">
-    <p>Usuario no autenticado.</p>
-
-    <button (click)="login()">
-      Iniciar sesión con Microsoft
+  <!-- Vista para usuario NO logueado -->
+  <div *ngIf="!user">
+    <p>Por favor, inicia sesión con tu cuenta institucional para acceder al sistema.</p>
+    <button (click)="login()"
+      style="padding: 10px; background-color: #0078D4; color: white; border: none; cursor: pointer;">
+      Iniciar Sesión con Entra ID
     </button>
-  </section>
+  </div>
 
-  <section *ngIf="user">
-    <h2>Sesión iniciada correctamente</h2>
+  <!-- Vista para usuario SÍ logueado -->
+  <div *ngIf="user">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; background-color: #f4f4f4; padding: 10px;">
+      <span>Bienvenido, <strong>{{ user.name }}</strong> ({{ user.username }})</span>
+      <button (click)="logout()"
+        style="padding: 5px 10px; background-color: #d9534f; color: white; border: none; cursor: pointer;">
+        Cerrar Sesión
+      </button>
+    </div>
 
-    <p><strong>Nombre:</strong> {{ user.name }}</p>
-    <p><strong>Cuenta:</strong> {{ user.username }}</p>
-    <p><strong>Tenant:</strong> {{ user.tenantId }}</p>
+    <hr>
 
-    <button (click)="logout()">
-      Cerrar sesión
-    </button>
-  </section>
+    <!-- Menú de navegación mínimo -->
+    <nav style="margin-bottom: 20px;">
+      <button routerLink="/catalog" style="margin-right: 10px;">Ver Catálogo</button>
+      <button routerLink="/orders" style="margin-right: 10px;">Gestión de Pedidos</button>
+      <button routerLink="/protegido">Prueba MsalGuard</button>
+    </nav>
 
-</main>
+    <!-- Aquí se inyectarán dinámicamente los componentes según la ruta -->
+    <div style="border: 1px solid #ccc; padding: 20px;">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

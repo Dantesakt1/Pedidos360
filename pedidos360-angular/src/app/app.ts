@@ -32,7 +32,7 @@ import {
 } from 'rxjs/operators';
 
 import { environment }
-  from '../environments/environment';
+  from './environments/environment';
 
 @Component({
   selector: 'app-root',

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Pedidos360Service } from '../services/pedidos360.service';
 import { Producto } from '../models/producto.model';
 
 @Component({
     selector: 'app-catalog',
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: './catalog.component.html'
 })
 export class CatalogComponent implements OnInit {

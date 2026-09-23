@@ -1,0 +1,29 @@
+.menu-item {
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    /* Aquí está la forma del cuadrito */
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.menu-item .icon {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    opacity: 0.6;
+}
+
+/* El estilo exacto del cuadrito seleccionado */
+.active-link {
+    background-color: rgba(220, 220, 220, 0.53) !important;
+    color: white !important;
+}
+
+.active-link .icon {
+    opacity: 1;
+}

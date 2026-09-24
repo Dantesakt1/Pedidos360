@@ -3,6 +3,8 @@ package com.pedidos360.backend.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // Importación agregada para solucionar el error 500
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -31,6 +33,7 @@ public class Pedido {
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     // Relación con los productos para gestionar el catálogo y el stock
+    @JsonIgnore // Esto evita la recursión infinita al enviar los datos a Angular
     @ManyToMany
     @JoinTable(
         name = "pedido_productos",

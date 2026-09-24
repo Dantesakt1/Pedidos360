@@ -9,13 +9,12 @@ import {
   MsalInterceptorConfiguration
 } from '@azure/msal-angular';
 import { environment } from './environments/environment';
-export function MSALInstanceFactory():
-  IPublicClientApplication {
+
+export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
       clientId: environment.msal.clientId,
-      authority:
-        `https://login.microsoftonline.com/${environment.msal.tenantId}`,
+      authority: `https://login.microsoftonline.com/${environment.msal.tenantId}`,
       redirectUri: environment.msal.redirectUri,
       postLogoutRedirectUri: environment.msal.redirectUri
     },
@@ -27,8 +26,8 @@ export function MSALInstanceFactory():
     }
   });
 }
-export function MSALGuardConfigFactory():
-  MsalGuardConfiguration {
+
+export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
@@ -36,14 +35,16 @@ export function MSALGuardConfigFactory():
     }
   };
 }
-export function MSALInterceptorConfigFactory():
-  MsalInterceptorConfiguration {
-  const protectedResourceMap =
-    new Map<string, Array<string>>();
+
+export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
+  const protectedResourceMap = new Map<string, Array<string>>();
+  
+  // Interceptar llamadas dirigidas a tu EC2
   protectedResourceMap.set(
-    `${environment.apiBaseUrl}/*`,
+    'https://lkq0yv0y3l.execute-api.us-east-1.amazonaws.com/*', 
     [environment.msal.apiScope]
   );
+  
   return {
     interactionType: InteractionType.Redirect,
     protectedResourceMap

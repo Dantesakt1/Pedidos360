@@ -1,91 +1,40 @@
 <div style="width: 100%;">
-
     <!-- Título y botón superior -->
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
         <div>
             <h2 style="margin: 0 0 6px 0; color: #1e293b; font-size: 1.7rem; font-weight: 500;">Pedidos</h2>
-            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">Consulta y gestiona todos los pedidos de la
-                operación</p>
+            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">Consulta y gestiona todos los pedidos de la operación</p>
         </div>
-        <button
+        <button data-bs-toggle="modal" data-bs-target="#modalPedido"
             style="background-color: #10b981; color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(16,185,129,0.2);">
             + Crear pedido
         </button>
     </div>
 
-    <!-- Barra de Filtros Visuales -->
-    <div style="display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-end;">
-        <div style="flex: 2;">
-            <label
-                style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; color: #1e293b;">Buscar</label>
-            <input type="text" placeholder="Pedido, cliente o SKU"
-                style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; outline: none; font-size: 0.9rem;">
-        </div>
-        <div style="flex: 1.5;">
-            <label
-                style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; color: #1e293b;">Estado</label>
-            <select
-                style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; outline: none; color: #475569; font-size: 0.9rem; background: white;">
-                <option>Todos los estados</option>
-            </select>
-        </div>
-        <div style="flex: 1.5;">
-            <label
-                style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; color: #1e293b;">Fecha</label>
-            <select
-                style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; outline: none; color: #475569; font-size: 0.9rem; background: white;">
-                <option>Últimos 30 días</option>
-            </select>
-        </div>
-        <div>
-            <button
-                style="padding: 10px 20px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 600; color: #1e293b; cursor: pointer; font-size: 0.9rem;">Filtrar</button>
-        </div>
-    </div>
-
     <!-- Tabla de Datos -->
-    <div
-        style="background: white; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+    <div style="background: white; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0;">
                 <tr>
-                    <th
-                        style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
-                        Pedido / cliente</th>
-                    <th
-                        style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: center;">
-                        Fecha</th>
-                    <th
-                        style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: center;">
-                        Total</th>
-                    <th
-                        style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: center;">
-                        Estado</th>
-                    <th
-                        style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: right;">
-                        Acción</th>
+                    <th style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Pedido / cliente</th>
+                    <th style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: center;">Fecha</th>
+                    <th style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: center;">Total</th>
+                    <th style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: center;">Estado</th>
+                    <th style="padding: 14px 20px; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; text-align: right;">Acción</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let pedido of pedidos" style="border-bottom: 1px solid #f1f5f9;">
-
                     <td style="padding: 16px 20px;">
-                        <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">#P-{{ pedido.id || '1048' }}
-                        </div>
-                        <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 3px;">{{ pedido.clienteId ||
-                            'Ferretería Los Andes' }}</div>
+                        <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">#P-{{ pedido.id }}</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 3px;">{{ pedido.clienteId || 'Cliente' }}</div>
                     </td>
-
                     <td style="padding: 16px 20px; color: #475569; font-size: 0.85rem; text-align: center;">
                         {{ pedido.fechaCreacion | date:'dd MMM, HH:mm' }}
                     </td>
-
-                    <td
-                        style="padding: 16px 20px; color: #1e293b; font-size: 0.9rem; font-weight: 600; text-align: center;">
+                    <td style="padding: 16px 20px; color: #1e293b; font-size: 0.9rem; font-weight: 600; text-align: center;">
                         $186.450
                     </td>
-
-                    <!-- Badges de estado exactos -->
                     <td style="padding: 16px 20px; text-align: center;">
                         <span [ngStyle]="{
               'background-color': pedido.estado === 'ACEPTADO' ? '#ede9fe' : pedido.estado === 'EN_PREPARACION' ? '#fef3c7' : pedido.estado === 'DESPACHADO' ? '#dcfce7' : pedido.estado === 'ENTREGADO' ? '#dcfce7' : pedido.estado === 'CANCELADO' ? '#fee2e2' : '#f1f5f9',
@@ -94,26 +43,22 @@
                             {{ pedido.estado }}
                         </span>
                     </td>
-
-                    <!-- Botones funcionales con la lógica de avanzar estado -->
+                    
+                    <!-- Columna de Acción con Diferenciación de Roles -->
                     <td style="padding: 16px 20px; text-align: right;">
-                        <button *ngIf="pedido.estado === 'CREADO'" (click)="avanzarEstado(pedido, 'ACEPTADO')"
-                            style="background: none; color: #10b981; border: none; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-                            Aceptar →
-                        </button>
-                        <button *ngIf="pedido.estado === 'ACEPTADO'" (click)="avanzarEstado(pedido, 'DESPACHADO')"
-                            style="background: none; color: #10b981; border: none; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-                            Despachar →
-                        </button>
-                        <button *ngIf="pedido.estado !== 'CREADO' && pedido.estado !== 'ACEPTADO'"
-                            style="background: none; color: #10b981; border: none; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-                            Ver detalle →
-                        </button>
+                        <ng-container *ngIf="esAdminOp; else clienteVista">
+                            <button *ngIf="pedido.estado === 'CREADO'" (click)="avanzarEstado(pedido, 'ACEPTADO')" style="background: none; color: #10b981; border: none; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
+                                Aceptar →
+                            </button>
+                            <button *ngIf="pedido.estado === 'ACEPTADO'" (click)="avanzarEstado(pedido, 'DESPACHADO')" style="background: none; color: #10b981; border: none; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
+                                Despachar →
+                            </button>
+                        </ng-container>
+                        <ng-template #clienteVista>
+                            <span style="color: #94a3b8; font-size: 0.8rem; font-style: italic;">Solo lectura (Cliente)</span>
+                        </ng-template>
                     </td>
-
                 </tr>
-
-                <!-- Mensaje si la base de datos está vacía -->
                 <tr *ngIf="pedidos.length === 0">
                     <td colspan="5" style="padding: 30px; text-align: center; color: #94a3b8; font-size: 0.9rem;">
                         No hay pedidos para mostrar. Crea uno nuevo.
@@ -122,4 +67,58 @@
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Modal para Crear Pedido con Selector de Cantidades -->
+<div class="modal fade" id="modalPedido" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-0 pb-0 px-4 pt-4">
+        <h5 class="fw-bold text-dark mb-0">Nuevo Pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="cerrarModalPedidoBtn"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form (submit)="crearPedido(); $event.preventDefault()">
+          <div class="mb-3">
+            <label class="form-label text-secondary small fw-bold">Identificador del Cliente</label>
+            <input type="text" class="form-control rounded-3" [(ngModel)]="nuevoPedido.clienteId" name="clienteId" required placeholder="Ej: Ferretería Los Andes">
+          </div>
+
+          <!-- Selector de productos por cantidad -->
+          <div class="card bg-light border-0 p-3 mb-3 rounded-3">
+            <label class="form-label text-secondary small fw-bold mb-2">Agregar Productos al Pedido</label>
+            <div class="row g-2 align-items-end">
+              <div class="col-7">
+                <select class="form-control rounded-3" [(ngModel)]="productoSeleccionadoId" name="prodTemp">
+                  <option [ngValue]="null">Seleccione un producto...</option>
+                  <option *ngFor="let prod of productosCatalogo" [value]="prod.id">
+                    {{ prod.nombre }} (Stock: {{ prod.stock }}) - ${{ prod.precio }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-3">
+                <input type="number" class="form-control rounded-3" [(ngModel)]="cantidadSeleccionada" name="cantTemp" min="1" placeholder="Cant">
+              </div>
+              <div class="col-2">
+                <button type="button" class="btn btn-secondary w-100 rounded-3" (click)="agregarItemAlPedido()">+ Add</button>
+              </div>
+            </div>
+
+            <!-- Lista de items agregados -->
+            <ul class="list-group mt-3" *ngIf="nuevoPedido.items.length > 0">
+              <li class="list-group-item d-flex justify-content-between align-items-center py-2" *ngFor="let item of nuevoPedido.items; let i = index">
+                <span><strong>{{ getNombreProducto(item.productoId) }}</strong> — Cantidad: {{ item.cantidad }}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger border-0" (click)="quitarItem(i)">✕</button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-light px-4 rounded-3" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success px-4 rounded-3 fw-medium" [disabled]="nuevoPedido.items.length === 0">Crear Pedido</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

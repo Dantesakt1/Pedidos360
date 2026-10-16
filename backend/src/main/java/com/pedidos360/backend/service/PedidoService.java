@@ -3,6 +3,7 @@ package com.pedidos360.backend.service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import com.pedidos360.backend.model.EstadoPedido;
 import com.pedidos360.backend.model.Pedido;
 import com.pedidos360.backend.model.PedidoRequest;
 import com.pedidos360.backend.model.Producto;
+import com.pedidos360.backend.model.PedidoEvento;
 import com.pedidos360.backend.repository.PedidoRepository;
 import com.pedidos360.backend.repository.ProductoRepository;
 
@@ -19,10 +21,13 @@ public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
     private final ProductoRepository productoRepository;
+    private final PedidoEventoProducer producer; // Agregamos el Productor de RabbitMQ
 
-    public PedidoService(PedidoRepository pedidoRepository, ProductoRepository productoRepository) {
+    // Inyectamos el producer en el constructor
+    public PedidoService(PedidoRepository pedidoRepository, ProductoRepository productoRepository, PedidoEventoProducer producer) {
         this.pedidoRepository = pedidoRepository;
         this.productoRepository = productoRepository;
+        this.producer = producer;
     }
 
     public List<Pedido> obtenerTodos() {
@@ -76,6 +81,23 @@ public class PedidoService {
         }
 
         pedido.setEstado(EstadoPedido.valueOf(nuevoEstado));
-        return pedidoRepository.save(pedido);
+        Pedido guardado = pedidoRepository.save(pedido);
+
+        // --- INTEGRACIÓN CON RABBITMQ ---
+        // Publicamos el evento asíncrono SOLO si el pedido fue guardado exitosamente como ACEPTADO
+        if ("ACEPTADO".equals(nuevoEstado)) {
+            PedidoEvento evento = new PedidoEvento(
+                guardado.getId(),
+                guardado.getEstado().name(),
+                "cliente@ejemplo.cl", // Idealmente sacarlo de los datos del cliente, usamos dummy por ahora
+                false, false, false,
+                LocalDateTime.now()
+            );
+            
+            // Publicamos a las 3 colas usando las routing keys
+            producer.publicarTareas(evento);
+        }
+
+        return guardado;
     }
 }

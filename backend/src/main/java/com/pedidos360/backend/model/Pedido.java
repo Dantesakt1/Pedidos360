@@ -25,20 +25,47 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String clienteId; // ID del usuario extraído del token de Entra ID
-    
+    private String clienteId;
+
     @Enumerated(EnumType.STRING)
     private EstadoPedido estado = EstadoPedido.CREADO;
 
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    // Relación con los productos para gestionar el catálogo y el stock
-    @JsonIgnore // Esto evita la recursión infinita al enviar los datos a Angular
+    @JsonIgnore
     @ManyToMany
-    @JoinTable(
-        name = "pedido_productos",
-        joinColumns = @JoinColumn(name = "pedido_id"),
-        inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
+    @JoinTable(name = "pedido_productos", joinColumns = @JoinColumn(name = "pedido_id"), inverseJoinColumns = @JoinColumn(name = "producto_id"))
     private List<Producto> productos;
+
+    public EstadoPedido getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
+    }
 }

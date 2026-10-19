@@ -9,20 +9,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PedidoEventoProducer {
-    
-    private final RabbitTemplate rabbitTemplate;
-    private final ObjectMapper objectMapper;
 
-    public PedidoEventoProducer(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
+    private final RabbitTemplate rabbitTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public PedidoEventoProducer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
-        this.objectMapper = objectMapper;
     }
 
     public void publicar(String routingKey, PedidoEvento evento) {
         try {
-            // Convertimos el evento a JSON para mandarlo
             String mensajeJson = objectMapper.writeValueAsString(evento);
-            // Publicamos al Exchange Directo
             rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, routingKey, mensajeJson);
             System.out.println("Mensaje publicado a [" + routingKey + "] -> " + mensajeJson);
         } catch (JsonProcessingException e) {
@@ -30,7 +27,6 @@ public class PedidoEventoProducer {
         }
     }
 
-    // Método que llamaremos desde PedidoService para disparar las 3 tareas
     public void publicarTareas(PedidoEvento evento) {
         publicar("notificaciones", evento);
         publicar("cocina", evento);

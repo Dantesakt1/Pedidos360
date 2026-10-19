@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pedidos360.backend.model.Producto;
 import com.pedidos360.backend.repository.ProductoRepository;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping("/api/catalog/products")
 public class ProductoController {

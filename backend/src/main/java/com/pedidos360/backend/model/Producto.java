@@ -42,4 +42,12 @@ public class Producto {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
 }

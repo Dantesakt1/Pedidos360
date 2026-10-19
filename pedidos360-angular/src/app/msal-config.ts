@@ -2,12 +2,9 @@ import {
   BrowserCacheLocation,
   IPublicClientApplication,
   InteractionType,
-  PublicClientApplication
+  PublicClientApplication,
 } from '@azure/msal-browser';
-import {
-  MsalGuardConfiguration,
-  MsalInterceptorConfiguration
-} from '@azure/msal-angular';
+import { MsalGuardConfiguration, MsalInterceptorConfiguration } from '@azure/msal-angular';
 import { environment } from './environments/environment';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -16,14 +13,14 @@ export function MSALInstanceFactory(): IPublicClientApplication {
       clientId: environment.msal.clientId,
       authority: `https://login.microsoftonline.com/${environment.msal.tenantId}`,
       redirectUri: environment.msal.redirectUri,
-      postLogoutRedirectUri: environment.msal.redirectUri
+      postLogoutRedirectUri: environment.msal.redirectUri,
     },
     cache: {
-      cacheLocation: BrowserCacheLocation.LocalStorage
+      cacheLocation: BrowserCacheLocation.LocalStorage,
     },
     system: {
-      allowPlatformBroker: false
-    }
+      allowPlatformBroker: false,
+    },
   });
 }
 
@@ -31,22 +28,19 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      scopes: [environment.msal.apiScope]
-    }
+      scopes: [environment.msal.apiScope],
+    },
   };
 }
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
-  
-  // Interceptar llamadas dirigidas a tu EC2
-  protectedResourceMap.set(
-    'https://lkq0yv0y3l.execute-api.us-east-1.amazonaws.com/*', 
-    [environment.msal.apiScope]
-  );
-  
+  protectedResourceMap.set('http://localhost:8080/*', [
+    'api://69750cb4-f9b1-4b9c-8039-7a16b65a83fb/Pedidos.Read',
+  ]);
+
   return {
     interactionType: InteractionType.Redirect,
-    protectedResourceMap
+    protectedResourceMap,
   };
 }

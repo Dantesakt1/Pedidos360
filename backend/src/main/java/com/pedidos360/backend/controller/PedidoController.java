@@ -15,8 +15,8 @@ import com.pedidos360.backend.model.Pedido;
 import com.pedidos360.backend.model.PedidoRequest;
 import com.pedidos360.backend.service.PedidoService;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
-@RestController
+@CrossOrigin(origins = "http://localhost:4200") 
+@RestController 
 @RequestMapping("/api/orders")
 public class PedidoController {
 

@@ -17,19 +17,30 @@ public class PedidoEventoProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void publicar(String routingKey, PedidoEvento evento) {
+    public void publicarDirect(String routingKey, PedidoEvento evento) {
         try {
             String mensajeJson = objectMapper.writeValueAsString(evento);
             rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, routingKey, mensajeJson);
-            System.out.println("Mensaje publicado a [" + routingKey + "] -> " + mensajeJson);
+            System.out.println("[RabbitMQ Direct -> " + routingKey + "] " + mensajeJson);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("No fue posible serializar el evento", e);
+        }
+    }
+
+    public void publicarTopic(String routingKey, PedidoEvento evento) {
+        try {
+            String mensajeJson = objectMapper.writeValueAsString(evento);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE, routingKey, mensajeJson);
+            System.out.println("[RabbitMQ Topic -> " + routingKey + "] " + mensajeJson);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("No fue posible serializar el evento", e);
         }
     }
 
     public void publicarTareas(PedidoEvento evento) {
-        publicar("notificaciones", evento);
-        publicar("cocina", evento);
-        publicar("documentos", evento);
+        publicarDirect("notificaciones", evento);
+        publicarDirect("cocina", evento);
+        publicarDirect("documentos", evento);
+        publicarTopic("pedido." + evento.estado().toLowerCase(), evento);
     }
 }

@@ -1,9 +1,17 @@
 import { Producto } from './producto.model';
 
+export interface PedidoItem {
+    id?: number;
+    producto: Producto;
+    cantidad: number;
+    subtotal: number;
+}
+
 export interface Pedido {
     id?: number;
     clienteId: string;
-    estado: string; // CREADO, ACEPTADO, EN_PREPARACION, DESPACHADO, ENTREGADO, CANCELADO
+    estado: string;
     fechaCreacion: string;
-    productos: Producto[];
+    total: number;
+    items: PedidoItem[];
 }

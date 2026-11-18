@@ -1,22 +1,12 @@
 package com.pedidos360.backend.controller;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.pedidos360.backend.model.Pedido;
 import com.pedidos360.backend.model.PedidoRequest;
 import com.pedidos360.backend.service.PedidoService;
 
-@CrossOrigin(origins = "http://localhost:4200") 
-@RestController 
+@RestController
 @RequestMapping("/api/orders")
 public class PedidoController {
 
@@ -37,19 +27,32 @@ public class PedidoController {
     }
 
     @PutMapping("/{id}/status")
-    public Pedido cambiarEstado(@PathVariable Long id, @RequestBody CambioEstadoRequest request) {
-        return pedidoService.cambiarEstado(id, request.getEstado());
-    }
-}
-
-class CambioEstadoRequest {
-    private String estado;
-
-    public String getEstado() {
-        return estado;
+    public Pedido cambiarEstado(@PathVariable("id") Long id, @RequestBody CambioEstadoRequest request) {
+        return pedidoService.cambiarEstado(
+                id,
+                request.getEstado(),
+                Boolean.TRUE.equals(request.getFalloNotificaciones()),
+                Boolean.TRUE.equals(request.getFalloCocina()),
+                Boolean.TRUE.equals(request.getFalloDocumentos())
+        );
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public static class CambioEstadoRequest {
+        private String estado;
+        private Boolean falloNotificaciones = false;
+        private Boolean falloCocina = false;
+        private Boolean falloDocumentos = false;
+
+        public String getEstado() { return estado; }
+        public void setEstado(String estado) { this.estado = estado; }
+
+        public Boolean getFalloNotificaciones() { return falloNotificaciones; }
+        public void setFalloNotificaciones(Boolean falloNotificaciones) { this.falloNotificaciones = falloNotificaciones; }
+
+        public Boolean getFalloCocina() { return falloCocina; }
+        public void setFalloCocina(Boolean falloCocina) { this.falloCocina = falloCocina; }
+
+        public Boolean getFalloDocumentos() { return falloDocumentos; }
+        public void setFalloDocumentos(Boolean falloDocumentos) { this.falloDocumentos = falloDocumentos; }
     }
 }

@@ -35,8 +35,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
-  protectedResourceMap.set('http://localhost:8080/*', [
-    'api://69750cb4-f9b1-4b9c-8039-7a16b65a83fb/Pedidos.Read',
+  protectedResourceMap.set(`${environment.apiBaseUrl}/*`, [
+    environment.msal.apiScope,
   ]);
 
   return {

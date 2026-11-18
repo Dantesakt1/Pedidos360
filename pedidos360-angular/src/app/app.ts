@@ -12,7 +12,7 @@ import { environment } from './environments/environment';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App implements OnInit, OnDestroy {
   user: AccountInfo | null = null;
@@ -22,15 +22,15 @@ export class App implements OnInit, OnDestroy {
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
     private cdr: ChangeDetectorRef,
-    private router: Router // <-- Inyectamos el Router
-  ) { }
+    private router: Router, // <-- Inyectamos el Router
+  ) {}
 
   ngOnInit(): void {
     // 1. Escuchar el evento EXACTO de cuando el login fue exitoso
     this.msalBroadcastService.msalSubject$
       .pipe(
         filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
-        takeUntil(this.destroying$)
+        takeUntil(this.destroying$),
       )
       .subscribe((result: any) => {
         const payload = result.payload;
@@ -42,7 +42,7 @@ export class App implements OnInit, OnDestroy {
     this.msalBroadcastService.inProgress$
       .pipe(
         filter((status: InteractionStatus) => status === InteractionStatus.None),
-        takeUntil(this.destroying$)
+        takeUntil(this.destroying$),
       )
       .subscribe(() => {
         this.actualizarUsuario();
@@ -70,13 +70,13 @@ export class App implements OnInit, OnDestroy {
 
   login(): void {
     this.authService.loginRedirect({
-      scopes: ['openid', 'profile', 'email']
+      scopes: ['openid', 'profile', 'email'],
     });
   }
 
   logout(): void {
     this.authService.logoutRedirect({
-      postLogoutRedirectUri: 'http://localhost:4200'
+      postLogoutRedirectUri: environment.msal.redirectUri,
     });
   }
 

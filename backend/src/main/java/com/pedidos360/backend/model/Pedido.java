@@ -1,23 +1,10 @@
 package com.pedidos360.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; // Importación agregada para solucionar el error 500
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
-
-@Data
 @Entity
 @Table(name = "pedidos")
 public class Pedido {
@@ -32,40 +19,26 @@ public class Pedido {
 
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "pedido_productos", joinColumns = @JoinColumn(name = "pedido_id"), inverseJoinColumns = @JoinColumn(name = "producto_id"))
-    private List<Producto> productos;
+    private Double total = 0.0;
 
-    public EstadoPedido getEstado() {
-        return estado;
-    }
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<PedidoItem> items = new ArrayList<>();
 
-    public void setEstado(EstadoPedido estado) {
-        this.estado = estado;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public List<Producto> getProductos() {
-        return productos;
-    }
+    public String getClienteId() { return clienteId; }
+    public void setClienteId(String clienteId) { this.clienteId = clienteId; }
 
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
-    }
+    public EstadoPedido getEstado() { return estado; }
+    public void setEstado(EstadoPedido estado) { this.estado = estado; }
 
-    public Long getId() {
-        return id;
-    }
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Double getTotal() { return total; }
+    public void setTotal(Double total) { this.total = total; }
 
-    public String getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(String clienteId) {
-        this.clienteId = clienteId;
-    }
+    public List<PedidoItem> getItems() { return items; }
+    public void setItems(List<PedidoItem> items) { this.items = items; }
 }

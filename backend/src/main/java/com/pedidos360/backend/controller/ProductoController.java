@@ -1,20 +1,12 @@
 package com.pedidos360.backend.controller;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import com.pedidos360.backend.model.Producto;
 import com.pedidos360.backend.repository.ProductoRepository;
 
-@CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping("/api/catalog/products")
 public class ProductoController {
@@ -42,6 +34,6 @@ public class ProductoController {
             producto.setPrecio(productoActualizado.getPrecio());
             producto.setStock(productoActualizado.getStock());
             return productoRepository.save(producto);
-        }).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
     }
 }

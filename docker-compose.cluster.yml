@@ -13,6 +13,8 @@ services:
       RABBITMQ_NODENAME: "rabbit@rabbit1"
     volumes:
       - rabbit1_data:/var/lib/rabbitmq
+    networks:
+      - pedidos360-net
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 10s
@@ -23,6 +25,9 @@ services:
     image: rabbitmq:4.2-management
     container_name: pedidos360-rabbit2
     hostname: rabbit2
+    depends_on:
+      rabbit1:
+        condition: service_healthy
     ports:
       - "5673:5672"
       - "15673:15672"
@@ -31,8 +36,19 @@ services:
       RABBITMQ_DEFAULT_USER: "labuser"
       RABBITMQ_DEFAULT_PASS: "labpass"
       RABBITMQ_NODENAME: "rabbit@rabbit2"
+    command: >
+      bash -c "
+      rabbitmq-server -detached &&
+      rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbit@rabbit2.pid &&
+      rabbitmqctl stop_app &&
+      rabbitmqctl join_cluster rabbit@rabbit1 &&
+      rabbitmqctl start_app &&
+      tail -f /dev/null
+      "
     volumes:
       - rabbit2_data:/var/lib/rabbitmq
+    networks:
+      - pedidos360-net
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 10s
@@ -42,3 +58,7 @@ services:
 volumes:
   rabbit1_data:
   rabbit2_data:
+
+networks:
+  pedidos360-net:
+    driver: bridge

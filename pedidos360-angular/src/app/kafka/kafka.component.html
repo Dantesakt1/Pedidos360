@@ -1,0 +1,143 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Apache Kafka — Streaming & Administración</h2>
+      <p class="text-muted mb-0">Clúster 3 Brokers + 3 ZooKeeper | Gestión de Tópicos, Offsets, Lag y DLT</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="refrescarTodo()">↻ Actualizar Estado</button>
+  </div>
+
+  <div *ngIf="mensajeAlerta" class="alert alert-info alert-dismissible fade show" role="alert">
+    {{ mensajeAlerta }}
+    <button type="button" class="btn-close" (click)="mensajeAlerta = ''"></button>
+  </div>
+
+  <!-- Simulador de Eventos y DLT -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body d-flex flex-wrap gap-2 align-items-center justify-content-between">
+      <div>
+        <h6 class="fw-bold mb-1">Pruebas en Vivo (Productor -> Particiones -> Consumidores / DLT)</h6>
+        <small class="text-muted">Simula eventos normales o fallidos (3 reintentos + envío automático a .dlt)</small>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-success btn-sm" (click)="enviarPrueba('PEDIDOS', false)">+ Evento Pedido</button>
+        <button class="btn btn-primary btn-sm" (click)="enviarPrueba('INVENTARIO', false)">+ Evento Inventario</button>
+        <button class="btn btn-danger btn-sm" (click)="enviarPrueba('PEDIDOS', true)">⚠ Simular Fallo -> DLT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crear nuevo tópico -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white fw-bold">Crear Nuevo Tópico Kafka</div>
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label small">Nombre del Tópico</label>
+          <input type="text" class="form-control" placeholder="ej. notificaciones.eventos" [(ngModel)]="nuevoTopico.name">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Particiones</label>
+          <input type="number" class="form-control" min="1" max="12" [(ngModel)]="nuevoTopico.partitions">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Replicación (RF)</label>
+          <input type="number" class="form-control" min="1" max="3" [(ngModel)]="nuevoTopico.replicationFactor">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Retención</label>
+          <select class="form-select" [(ngModel)]="nuevoTopico.retentionMs">
+            <option value="3600000">1 Hora</option>
+            <option value="86400000">1 Día</option>
+            <option value="259200000">3 Días</option>
+            <option value="604800000">7 Días</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-dark w-100" (click)="crearTopico()">Crear Tópico</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Tópicos -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white fw-bold">Tópicos Activos en el Clúster</div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Tópico</th>
+            <th>Particiones</th>
+            <th>Replication Factor</th>
+            <th>Retención (ms)</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of topics">
+            <td class="fw-semibold">{{ t.name }}</td>
+            <td><span class="badge bg-primary">{{ t.partitions }}</span></td>
+            <td><span class="badge bg-secondary">RF={{ t.replicationFactor }}</span></td>
+            <td><code>{{ t.retentionMs }}</code></td>
+            <td class="text-end">
+              <button class="btn btn-outline-secondary btn-sm me-1" (click)="aumentarParticiones(t)">+1 Partición</button>
+              <button class="btn btn-outline-info btn-sm me-1" (click)="cambiarRetencion(t, '86400000')">Ret. 24h</button>
+              <button *ngIf="!t.name.startsWith('pedidos.') && !t.name.startsWith('inventario.')"
+                      class="btn btn-outline-danger btn-sm" (click)="eliminarTopico(t.name)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Consumer Groups, Offsets y Lag -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white fw-bold">Consumer Groups, Offsets y Lag</div>
+    <div class="card-body">
+      <div *ngFor="let g of consumerGroups" class="border rounded p-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <span class="fw-bold me-2">{{ g.groupId }}</span>
+            <span class="badge bg-success">{{ g.state }}</span>
+          </div>
+          <span class="badge" [ngClass]="g.totalLag > 0 ? 'bg-warning text-dark' : 'bg-dark'">
+            Total Lag: {{ g.totalLag }}
+          </span>
+        </div>
+        <table class="table table-sm mb-0" *ngIf="g.partitions?.length">
+          <thead>
+            <tr class="text-muted small">
+              <th>Tópico</th>
+              <th>Partición</th>
+              <th>Current Offset</th>
+              <th>Log End Offset</th>
+              <th>Lag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of g.partitions" class="small">
+              <td>{{ p.topic }}</td>
+              <td>P{{ p.partition }}</td>
+              <td>{{ p.currentOffset }}</td>
+              <td>{{ p.logEndOffset }}</td>
+              <td>{{ p.lag }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stream en vivo de mensajes consumidos -->
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white fw-bold">Registro en Tiempo Real de Consumidores & DLT</div>
+    <div class="card-body bg-dark text-light font-monospace small" style="max-height: 260px; overflow-y: auto;">
+      <div *ngIf="eventsLog.length === 0" class="text-muted">Aún no hay eventos registrados en esta sesión...</div>
+      <div *ngFor="let linea of eventsLog" class="mb-1 border-bottom border-secondary pb-1">
+        {{ linea }}
+      </div>
+    </div>
+  </div>
+</div>

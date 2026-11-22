@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { MsalGuard } from '@azure/msal-angular';
 import { CatalogComponent } from './catalog/catalog.component';
 import { OrdersComponent } from './orders/orders.component';
+import { KafkaComponent } from './kafka/kafka.component';
 export const routes: Routes = [
     {
         path: 'protegido',
@@ -24,5 +25,9 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'catalog',
         pathMatch: 'full'
+    },
+    {   path: 'kafka', 
+        component: KafkaComponent, 
+        canActivate: [MsalGuard] 
     }
 ];
